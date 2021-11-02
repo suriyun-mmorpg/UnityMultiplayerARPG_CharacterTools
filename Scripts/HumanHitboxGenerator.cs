@@ -28,9 +28,15 @@ namespace MultiplayerARPG
 		public Transform rightLowerArm;
 		public Transform rightHand;
 
-		[Header("Tools")]
+		[Header("Component Field Tools")]
 		[InspectorButton(nameof(FillBoneTransforms))]
 		public bool btnFillBoneTransforms;
+
+		[Header("Hitboxes Tools")]
+		[InspectorButton(nameof(DestroyAllHitBoxComponents))]
+		public bool destroyAllHitBoxComponents;
+		[InspectorButton(nameof(DestroyAllHitBoxGameObjects))]
+		public bool destroyAllHitBoxGameObjects;
 
 		public void FillBoneTransforms()
         {
@@ -63,6 +69,49 @@ namespace MultiplayerARPG
 			rightUpperLeg = targetAnimator.GetBoneTransform(HumanBodyBones.RightUpperLeg);
 			rightLowerLeg = targetAnimator.GetBoneTransform(HumanBodyBones.RightLowerLeg);
 			rightFoot = targetAnimator.GetBoneTransform(HumanBodyBones.RightFoot);
+		}
+
+		public void DestroyAllHitBoxComponents()
+        {
+			if (root == null)
+			{
+				EditorUtility.DisplayDialog("Error", "No root transform assigned", "OK");
+				return;
+			}
+
+			DamageableHitBox[] hitboxes = root.GetComponentsInChildren<DamageableHitBox>();
+			for (int i = hitboxes.Length - 1; i >= 0; --i)
+            {
+				GameObject hitBoxesObj = hitboxes[i].gameObject;
+				Rigidbody rb = hitBoxesObj.GetComponent<Rigidbody>();
+				if (rb != null)
+					Destroy(rb);
+				Rigidbody2D rb2 = hitBoxesObj.GetComponent<Rigidbody2D>();
+				if (rb2 != null)
+					Destroy(rb2);
+				Collider col = hitBoxesObj.GetComponent<Collider>();
+				if (col != null)
+					Destroy(col);
+				Collider2D col2 = hitBoxesObj.GetComponent<Collider2D>();
+				if (col2 != null)
+					Destroy(col2);
+				Destroy(hitboxes[i]);
+			}
+        }
+
+		public void DestroyAllHitBoxGameObjects()
+		{
+			if (root == null)
+			{
+				EditorUtility.DisplayDialog("Error", "No root transform assigned", "OK");
+				return;
+			}
+
+			DamageableHitBox[] hitboxes = root.GetComponentsInChildren<DamageableHitBox>();
+			for (int i = hitboxes.Length - 1; i >= 0; --i)
+			{
+				Destroy(hitboxes[i].gameObject);
+			}
 		}
 	}
 }
