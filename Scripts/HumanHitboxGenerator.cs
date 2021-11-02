@@ -7,9 +7,9 @@ using UnityEngine;
 namespace MultiplayerARPG
 {
 	public class HumanHitboxGenerator : MonoBehaviour
-    {
-        [Header("Bones Transform")]
-        public Animator targetAnimator;
+	{
+		[Header("Bones Transform")]
+		public Animator targetAnimator;
 		public Transform root;
 		public Transform hips;
 		public Transform spine;
@@ -37,14 +37,16 @@ namespace MultiplayerARPG
 		public bool destroyAllHitBoxComponents;
 		[InspectorButton(nameof(DestroyAllHitBoxGameObjects))]
 		public bool destroyAllHitBoxGameObjects;
+		[InspectorButton(nameof(CreateHitBoxes))]
+		public bool createHitBoxes;
 
 		public void FillBoneTransforms()
-        {
+		{
 			if (targetAnimator == null)
-            {
+			{
 				EditorUtility.DisplayDialog("Error", "You have to choose target animator", "OK");
 				return;
-            }
+			}
 
 			if (!targetAnimator.isHuman)
 			{
@@ -72,7 +74,7 @@ namespace MultiplayerARPG
 		}
 
 		public void DestroyAllHitBoxComponents()
-        {
+		{
 			if (root == null)
 			{
 				EditorUtility.DisplayDialog("Error", "No root transform assigned", "OK");
@@ -81,7 +83,7 @@ namespace MultiplayerARPG
 
 			DamageableHitBox[] hitboxes = root.GetComponentsInChildren<DamageableHitBox>();
 			for (int i = hitboxes.Length - 1; i >= 0; --i)
-            {
+			{
 				GameObject hitBoxesObj = hitboxes[i].gameObject;
 				Rigidbody rb = hitBoxesObj.GetComponent<Rigidbody>();
 				if (rb != null)
@@ -97,7 +99,7 @@ namespace MultiplayerARPG
 					Destroy(col2);
 				Destroy(hitboxes[i]);
 			}
-        }
+		}
 
 		public void DestroyAllHitBoxGameObjects()
 		{
@@ -112,6 +114,27 @@ namespace MultiplayerARPG
 			{
 				Destroy(hitboxes[i].gameObject);
 			}
+		}
+
+		public void CreateHitBoxes()
+		{
+			if (root == null)
+			{
+				EditorUtility.DisplayDialog("Error", "No root transform assigned", "OK");
+				return;
+			}
+
+
+		}
+
+		public void CreateHitBoxes(Transform transform)
+		{
+			Rigidbody rb = transform.gameObject.AddComponent<Rigidbody>();
+			rb.useGravity = false;
+			rb.isKinematic = true;
+			BoxCollider col = transform.gameObject.AddComponent<BoxCollider>();
+			col.isTrigger = true;
+			// Adjust collider size
 		}
 	}
 }
