@@ -82,6 +82,7 @@ namespace MultiplayerARPG
 			}
 
 			DamageableHitBox[] hitboxes = root.GetComponentsInChildren<DamageableHitBox>();
+			int count = hitboxes.Length;
 			for (int i = hitboxes.Length - 1; i >= 0; --i)
 			{
 				GameObject hitBoxesObj = hitboxes[i].gameObject;
@@ -99,6 +100,7 @@ namespace MultiplayerARPG
 					Destroy(col2);
 				Destroy(hitboxes[i]);
 			}
+			EditorUtility.DisplayDialog("Message", $"{count} Destroyed", "OK");
 		}
 
 		public void DestroyAllHitBoxGameObjects()
@@ -110,10 +112,12 @@ namespace MultiplayerARPG
 			}
 
 			DamageableHitBox[] hitboxes = root.GetComponentsInChildren<DamageableHitBox>();
+			int count = hitboxes.Length;
 			for (int i = hitboxes.Length - 1; i >= 0; --i)
 			{
 				Destroy(hitboxes[i].gameObject);
 			}
+			EditorUtility.DisplayDialog("Message", $"{count} Destroyed", "OK");
 		}
 
 		public void CreateHitBoxes()
@@ -129,10 +133,12 @@ namespace MultiplayerARPG
 
 		public void CreateHitBoxes(Transform transform)
 		{
-			Rigidbody rb = transform.gameObject.AddComponent<Rigidbody>();
+			GameObject hitboxObj = new GameObject($"{transform.name}_Hitbox");
+			hitboxObj.transform.parent = transform;
+			Rigidbody rb = hitboxObj.AddComponent<Rigidbody>();
 			rb.useGravity = false;
 			rb.isKinematic = true;
-			BoxCollider col = transform.gameObject.AddComponent<BoxCollider>();
+			BoxCollider col = hitboxObj.AddComponent<BoxCollider>();
 			col.isTrigger = true;
 			// Adjust collider size
 		}
