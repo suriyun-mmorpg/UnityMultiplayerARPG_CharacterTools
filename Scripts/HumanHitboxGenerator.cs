@@ -28,7 +28,7 @@ namespace MultiplayerARPG
 
 		[Header("Component Field Tools")]
 		[InspectorButton(nameof(FillBoneTransforms))]
-		public bool btnFillBoneTransforms;
+		public bool fillBoneTransforms;
 
 		[Header("Hitboxes Tools")]
 		[InspectorButton(nameof(DestroyAllHitBoxComponents))]
