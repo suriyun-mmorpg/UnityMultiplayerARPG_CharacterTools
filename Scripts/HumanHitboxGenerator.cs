@@ -239,7 +239,9 @@ namespace MultiplayerARPG
 			float height = direction.magnitude * 1f;
 			Vector3 heightAxis = GetAxisVectorToDirection(t, direction);
 
-			t.gameObject.AddComponent<Rigidbody>();
+			Rigidbody rb = t.gameObject.AddComponent<Rigidbody>();
+			rb.useGravity = false;
+			rb.isKinematic = true;
 			float scaleF = GetScaleF(t);
 
 			Vector3 size = Vector3.Scale(heightAxis, new Vector3(height, height, height));
@@ -251,6 +253,7 @@ namespace MultiplayerARPG
 			box.size = size / scaleF;
 			box.size = new Vector3(Mathf.Abs(box.size.x), Mathf.Abs(box.size.y), Mathf.Abs(box.size.z));
 			box.center = t.InverseTransformPoint(Vector3.Lerp(startPoint, endPoint, 0.5f));
+			box.isTrigger = true;
 
 			hitboxObj.AddComponent<DamageableHitBox>();
 		}
@@ -277,7 +280,9 @@ namespace MultiplayerARPG
 				widthAxis = new Vector3(heightAxis.y, heightAxis.z, heightAxis.x);
 			}
 
-			t.gameObject.AddComponent<Rigidbody>();
+			Rigidbody rb = t.gameObject.AddComponent<Rigidbody>();
+			rb.useGravity = false;
+			rb.isKinematic = true;
 
 			Vector3 heightAdd = Vector3.Scale(heightAxis, new Vector3(height, height, height));
 			Vector3 widthAdd = Vector3.Scale(widthAxis, new Vector3(width, width, width));
@@ -290,6 +295,7 @@ namespace MultiplayerARPG
 			BoxCollider box = t.gameObject.AddComponent<BoxCollider>();
 			box.size = size / GetScaleF(t);
 			box.center = t.InverseTransformPoint(Vector3.Lerp(startPoint, endPoint, 0.5f));
+			box.isTrigger = true;
 
 			hitboxObj.AddComponent<DamageableHitBox>();
 		}
