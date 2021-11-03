@@ -232,6 +232,7 @@ namespace MultiplayerARPG
 			hitboxObj.transform.parent = transform;
 			hitboxObj.transform.localScale = Vector3.one;
 			hitboxObj.transform.localPosition = Vector3.zero;
+			hitboxObj.transform.localRotation = Quaternion.identity;
 			Transform t = hitboxObj.transform;
 
 			Vector3 direction = endPoint - startPoint;
@@ -261,6 +262,7 @@ namespace MultiplayerARPG
 			hitboxObj.transform.parent = transform;
 			hitboxObj.transform.localScale = Vector3.one;
 			hitboxObj.transform.localPosition = Vector3.zero;
+			hitboxObj.transform.localRotation = Quaternion.identity;
 			Transform t = hitboxObj.transform;
 
 			Vector3 direction = endPoint - startPoint;
