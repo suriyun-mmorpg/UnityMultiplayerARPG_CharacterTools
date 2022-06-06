@@ -1,11 +1,13 @@
 #if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace MultiplayerARPG
 {
 	public class HumanHitboxGenerator : MonoBehaviour
 	{
+#if UNITY_EDITOR
 		[Header("Bones Transform")]
 		public Animator targetAnimator;
 		public Transform root;
@@ -25,6 +27,19 @@ namespace MultiplayerARPG
 		public Transform rightUpperArm;
 		public Transform rightLowerArm;
 		public Transform rightHand;
+
+		[Header("Collider Width")]
+		public float hipsWidthMultiplier = 0.8f;
+		public float spineWidthMultiplier = 0.75f;
+		public float armWidthAspect = 0.4f;
+		public float upperArmWidthMultiplier = 1f;
+		public float lowerArmWidthMultiplier = 1f;
+		public float handWidthMultiplier = 0.5f;
+		public float legWidthAspect = 0.3f;
+		public float upperLegWidthMultiplier = 1f;
+		public float lowerLegWidthMultiplier = 1f;
+		public float footWidthMultiplier = 0.5f;
+		public float headWidthMultiplier = 0.8f;
 
 		[Header("Component Field Tools")]
 		[InspectorButton(nameof(FillBoneTransforms))]
@@ -147,13 +162,13 @@ namespace MultiplayerARPG
 
 			Vector3 lastEndPoint = spine.position;
 			hipsStartPoint += (hipsStartPoint - upperArmToHeadCentroid) * 0.1f;
-			float hipsWidth = torsoWidth * 0.8f;
+			float hipsWidth = torsoWidth * hipsWidthMultiplier;
 			CreateHitBox(hips, hipsStartPoint, lastEndPoint, hipsWidth, torsoProportionAspect, shoulderDirection);
 
 			// Spine
 			Vector3 spineStartPoint = lastEndPoint;
 			lastEndPoint = chest.position;
-			float spineWidth = torsoWidth * 0.75f;
+			float spineWidth = torsoWidth * spineWidthMultiplier;
 			CreateHitBox(spine, spineStartPoint, lastEndPoint, spineWidth, torsoProportionAspect, shoulderDirection);
 
 			// Chest
@@ -166,29 +181,25 @@ namespace MultiplayerARPG
 			Vector3 headEndPoint = headStartPoint + (headStartPoint - hipsStartPoint) * 0.45f;
 			Vector3 axis = head.TransformVector(GetAxisVectorToDirection(head, headEndPoint - headStartPoint));
 			headEndPoint = headStartPoint + Vector3.Project(headEndPoint - headStartPoint, axis).normalized * (headEndPoint - headStartPoint).magnitude;
-			CreateHitBox(head, headStartPoint, headEndPoint, Vector3.Distance(headStartPoint, headEndPoint) * 0.8f);
+			CreateHitBox(head, headStartPoint, headEndPoint, Vector3.Distance(headStartPoint, headEndPoint) * headWidthMultiplier);
 
 			// Arms
-			float armWidthAspect = 0.4f;
-
 			float leftArmWidth = Vector3.Distance(leftUpperArm.position, leftLowerArm.position) * armWidthAspect;
-			CreateHitBox(leftUpperArm, leftUpperArm.position, leftLowerArm.position, leftArmWidth);
-			CreateHitBox(leftLowerArm, leftLowerArm.position, leftHand.position, leftArmWidth * 0.9f);
+			CreateHitBox(leftUpperArm, leftUpperArm.position, leftLowerArm.position, leftArmWidth * upperArmWidthMultiplier);
+			CreateHitBox(leftLowerArm, leftLowerArm.position, leftHand.position, leftArmWidth * lowerArmWidthMultiplier);
 
 			float rightArmWidth = Vector3.Distance(rightUpperArm.position, rightLowerArm.position) * armWidthAspect;
-			CreateHitBox(rightUpperArm, rightUpperArm.position, rightLowerArm.position, rightArmWidth);
-			CreateHitBox(rightLowerArm, rightLowerArm.position, rightHand.position, rightArmWidth * 0.9f);
+			CreateHitBox(rightUpperArm, rightUpperArm.position, rightLowerArm.position, rightArmWidth * upperArmWidthMultiplier);
+			CreateHitBox(rightLowerArm, rightLowerArm.position, rightHand.position, rightArmWidth * lowerArmWidthMultiplier);
 
 			// Legs
-			float legWidthAspect = 0.3f;
-
 			float leftLegWidth = Vector3.Distance(leftUpperLeg.position, leftLowerLeg.position) * legWidthAspect;
-			CreateHitBox(leftUpperLeg, leftUpperLeg.position, leftLowerLeg.position, leftLegWidth);
-			CreateHitBox(leftLowerLeg, leftLowerLeg.position, leftFoot.position, leftLegWidth * 0.9f);
+			CreateHitBox(leftUpperLeg, leftUpperLeg.position, leftLowerLeg.position, leftLegWidth * upperLegWidthMultiplier);
+			CreateHitBox(leftLowerLeg, leftLowerLeg.position, leftFoot.position, leftLegWidth * lowerLegWidthMultiplier);
 
 			float rightLegWidth = Vector3.Distance(rightUpperLeg.position, rightLowerLeg.position) * legWidthAspect;
-			CreateHitBox(rightUpperLeg, rightUpperLeg.position, rightLowerLeg.position, rightLegWidth);
-			CreateHitBox(rightLowerLeg, rightLowerLeg.position, rightFoot.position, rightLegWidth * 0.9f);
+			CreateHitBox(rightUpperLeg, rightUpperLeg.position, rightLowerLeg.position, rightLegWidth * upperLegWidthMultiplier);
+			CreateHitBox(rightLowerLeg, rightLowerLeg.position, rightFoot.position, rightLegWidth * lowerLegWidthMultiplier);
 
 			// Hands
 			CreateHandHitBox(leftHand, leftLowerArm);
@@ -206,7 +217,7 @@ namespace MultiplayerARPG
 			Vector3 endPoint = hand.position - (lowerArm.position - hand.position) * 0.75f;
 			endPoint = hand.position + Vector3.Project(endPoint - hand.position, axis).normalized * (endPoint - hand.position).magnitude;
 
-			CreateHitBox(hand, hand.position, endPoint, Vector3.Distance(endPoint, hand.position) * 0.5f);
+			CreateHitBox(hand, hand.position, endPoint, Vector3.Distance(endPoint, hand.position) * handWidthMultiplier);
 		}
 
 		private void CreateFootHitBox(Transform foot, Transform upperLeg, Transform root)
@@ -217,7 +228,7 @@ namespace MultiplayerARPG
 			Vector3 endPoint = foot.position + root.forward * legHeight * 0.25f;
 			endPoint = foot.position + Vector3.Project(endPoint - foot.position, axis).normalized * (endPoint - foot.position).magnitude;
 
-			float width = Vector3.Distance(endPoint, foot.position) * 0.5f;
+			float width = Vector3.Distance(endPoint, foot.position) * footWidthMultiplier;
 			Vector3 startPoint = foot.position;
 
 			Vector3 direction = endPoint - startPoint;
@@ -362,6 +373,6 @@ namespace MultiplayerARPG
 			Vector3 scale = t.lossyScale;
 			return (scale.x + scale.y + scale.z) / 3f;
 		}
+#endif
 	}
 }
-#endif
