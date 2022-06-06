@@ -50,6 +50,8 @@ namespace MultiplayerARPG
 		public bool destroyAllHitBoxComponents;
 		[InspectorButton(nameof(DestroyAllHitBoxGameObjects))]
 		public bool destroyAllHitBoxGameObjects;
+		[InspectorButton(nameof(DestroyAllGameObjectsWhichItsNameEndWith_Hitbox))]
+		public bool destroyAllGameObjectsWhichItsNameEndWith_Hitbox;
 		[InspectorButton(nameof(CreateHitBoxes))]
 		public bool createHitBoxes;
 
@@ -131,6 +133,27 @@ namespace MultiplayerARPG
 				DestroyImmediate(hitboxes[i].gameObject);
 			}
 			EditorUtility.DisplayDialog("Message", $"{count} Destroyed", "OK");
+		}
+
+		public void DestroyAllGameObjectsWhichItsNameEndWith_Hitbox()
+		{
+			if (root == null)
+			{
+				EditorUtility.DisplayDialog("Error", "No root transform assigned", "OK");
+				return;
+			}
+			DestroyChildenWhichItsNameEndWith_Hitbox(root);
+		}
+
+		public void DestroyChildenWhichItsNameEndWith_Hitbox(Transform parent)
+		{
+			for (int i = parent.childCount - 1; i >= 0; --i)
+			{
+				if (parent.GetChild(i).name.ToLower().EndsWith("_hitbox"))
+					DestroyImmediate(parent.GetChild(i).gameObject);
+				else
+					DestroyChildenWhichItsNameEndWith_Hitbox(parent.GetChild(i));
+			}
 		}
 
 		public void CreateHitBoxes()
