@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MultiplayerARPG
 {
-	public class HumanHitboxGenerator : MonoBehaviour
+	public class HumanHitboxBuilder : MonoBehaviour
 	{
 #if UNITY_EDITOR
 		[Header("Bones Transform")]
@@ -35,11 +35,13 @@ namespace MultiplayerARPG
 		public float upperArmWidthMultiplier = 1f;
 		public float lowerArmWidthMultiplier = 1f;
 		public float handWidthMultiplier = 0.5f;
+		public float handLengthMultiplier = 0.75f;
 		public float legWidthAspect = 0.3f;
 		public float upperLegWidthMultiplier = 1f;
 		public float lowerLegWidthMultiplier = 1f;
 		public float footWidthMultiplier = 0.5f;
 		public float headWidthMultiplier = 0.8f;
+		public float headHeightMultiplier = 0.5f;
 
 		[Header("Component Field Tools")]
 		[InspectorButton(nameof(FillBoneTransforms))]
@@ -201,7 +203,7 @@ namespace MultiplayerARPG
 
 			// Head
 			Vector3 headStartPoint = lastEndPoint;
-			Vector3 headEndPoint = headStartPoint + (headStartPoint - hipsStartPoint) * 0.45f;
+			Vector3 headEndPoint = headStartPoint + (headStartPoint - hipsStartPoint) * headHeightMultiplier;
 			Vector3 axis = head.TransformVector(GetAxisVectorToDirection(head, headEndPoint - headStartPoint));
 			headEndPoint = headStartPoint + Vector3.Project(headEndPoint - headStartPoint, axis).normalized * (headEndPoint - headStartPoint).magnitude;
 			CreateHitBox(head, headStartPoint, headEndPoint, Vector3.Distance(headStartPoint, headEndPoint) * headWidthMultiplier);
@@ -237,7 +239,7 @@ namespace MultiplayerARPG
 		{
 			Vector3 axis = hand.TransformVector(GetAxisVectorToPoint(hand, GetChildCentroid(hand, lowerArm.position)));
 
-			Vector3 endPoint = hand.position - (lowerArm.position - hand.position) * 0.75f;
+			Vector3 endPoint = hand.position - (lowerArm.position - hand.position) * handLengthMultiplier;
 			endPoint = hand.position + Vector3.Project(endPoint - hand.position, axis).normalized * (endPoint - hand.position).magnitude;
 
 			CreateHitBox(hand, hand.position, endPoint, Vector3.Distance(endPoint, hand.position) * handWidthMultiplier);
