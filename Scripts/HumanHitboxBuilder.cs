@@ -28,20 +28,30 @@ namespace MultiplayerARPG
 		public Transform rightLowerArm;
 		public Transform rightHand;
 
-		[Header("Collider Width")]
+		[Header("Body Collider Settings")]
 		public float hipsWidthMultiplier = 0.8f;
 		public float spineWidthMultiplier = 0.75f;
+
+		[Header("Head Collider Settings")]
+		public float headWidthMultiplier = 0.8f;
+		public float headHeightMultiplier = 0.5f;
+
+		[Header("Arm Collider Settings")]
 		public float armWidthAspect = 0.4f;
 		public float upperArmWidthMultiplier = 1f;
 		public float lowerArmWidthMultiplier = 1f;
+
+		[Header("Hand Collider Settings")]
 		public float handWidthMultiplier = 0.5f;
 		public float handLengthMultiplier = 0.75f;
+
+		[Header("Leg Collider Settings")]
 		public float legWidthAspect = 0.3f;
 		public float upperLegWidthMultiplier = 1f;
 		public float lowerLegWidthMultiplier = 1f;
+
+		[Header("Foot Collider Settings")]
 		public float footWidthMultiplier = 0.5f;
-		public float headWidthMultiplier = 0.8f;
-		public float headHeightMultiplier = 0.5f;
 
 		[Header("Component Field Tools")]
 		[InspectorButton(nameof(FillBoneTransforms))]
